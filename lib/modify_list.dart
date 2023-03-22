@@ -10,8 +10,14 @@ class ModifyPage extends StatefulWidget {
 class _ModifyPageState extends State<ModifyPage> {
   List<String> items = [];
 
-  _pressed() {
-    print('test');
+  _pressed(i) {
+    setState(() {
+      widget.items.remove(i);
+    });
+  }
+
+  _return() {
+    Navigator.pop(context, widget.items);
   }
 
   @override
@@ -21,10 +27,29 @@ class _ModifyPageState extends State<ModifyPage> {
       body: Center(
         child: ListView(
           children: <Widget>[
+            Container(
+              width: double.infinity,
+              height: 100,
+              color: const Color.fromARGB(255, 217, 217, 217),
+              child: const Text(
+                'MODIFY\nLIST',
+                style: TextStyle(fontSize: 40),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            TextButton(
+              onPressed: _return,
+              child: Text('Return'),
+            ),
             for (var i in widget.items)
               TextButton(
-                onPressed: _pressed(),
-                child: Text(i),
+                onPressed: () {
+                  _pressed(i);
+                },
+                child: Text(
+                  i,
+                  style: const TextStyle(color: Colors.red, fontSize: 16),
+                ),
               )
           ],
         ),
