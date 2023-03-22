@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'modify_list.dart';
 import 'package:flutter/material.dart';
 
 class SecondPage extends StatefulWidget {
@@ -22,7 +23,13 @@ class _SecondPageState extends State<SecondPage> {
   List<String> items = [];
   TextEditingController itemController = TextEditingController();
 
-  _modifyList() {}
+  _modifyList() async {
+    final result = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ModifyPage(items: items)));
+    setState(() {
+      items = result;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
