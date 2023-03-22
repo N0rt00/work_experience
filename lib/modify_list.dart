@@ -39,7 +39,7 @@ class _ModifyPageState extends State<ModifyPage> {
             ),
             TextButton(
               onPressed: _return,
-              child: Text('Return'),
+              child: const Text('Return'),
             ),
             for (var i in widget.items)
               TextButton(
