@@ -51,6 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
       if (usernameController.text == 'user' &&
           passwordController.text == 'password') {
         print('right');
+        usernameController.clear();
+        passwordController.clear();
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const SecondPage()));
       } else {

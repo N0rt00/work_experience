@@ -76,6 +76,7 @@ class _SecondPageState extends State<SecondPage> {
                     onPressed: () {
                       setState(() {
                         items.add(itemController.text);
+                        itemController.clear();
                       });
                     },
                     child: const Icon(Icons.add)),
@@ -107,16 +108,23 @@ class Checkbox extends StatefulWidget {
 }
 
 class CheckboxState extends State<Checkbox> {
-  bool? checkedValue = false;
+  bool checkedValue = false;
+  Map<String, bool> values = {
+    'Text(widget.foodName, style: TextStyle(color: Colors.deepPurple)': true,
+    'Text(widget.foodName, style: TextStyle(color: Colors.lightBlue)': false,
+  };
 
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
-      title: Text(widget.foodName),
+      title: checkedValue
+          ? Text(widget.foodName,
+              style: const TextStyle(decoration: TextDecoration.lineThrough))
+          : Text(widget.foodName),
       value: checkedValue,
       onChanged: (newValue) {
         setState(() {
-          checkedValue = newValue;
+          checkedValue = newValue!;
         });
       },
       controlAffinity: ListTileControlAffinity.leading,
