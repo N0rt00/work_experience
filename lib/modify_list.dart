@@ -10,13 +10,23 @@ class ModifyPage extends StatefulWidget {
 class _ModifyPageState extends State<ModifyPage> {
   List<String> items = [];
 
+  _pressed() {
+    print('test');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
         child: ListView(
-          children: <Widget>[for (var i in widget.items) Text(i)],
+          children: <Widget>[
+            for (var i in widget.items)
+              TextButton(
+                onPressed: _pressed(),
+                child: Text(i),
+              )
+          ],
         ),
       ),
     );
