@@ -123,18 +123,32 @@ class CheckboxState extends State<Checkbox> {
 
   @override
   Widget build(BuildContext context) {
-    return CheckboxListTile(
-      title: checkedValue
-          ? Text(widget.foodName,
-              style: const TextStyle(decoration: TextDecoration.lineThrough))
-          : Text(widget.foodName),
-      value: checkedValue,
-      onChanged: (newValue) {
-        setState(() {
-          checkedValue = newValue!;
-        });
-      },
-      controlAffinity: ListTileControlAffinity.leading,
+    return Material(
+      child: InkWell(
+        onTap: () {
+          print('clicked');
+          setState(() {
+            checkedValue = !checkedValue;
+          });
+        },
+        splashFactory: NoSplash.splashFactory,
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 30, bottom: 12),
+              child: Text(
+                widget.foodName,
+                style: TextStyle(
+                    fontSize: 16,
+                    letterSpacing: 1,
+                    decoration: checkedValue
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
