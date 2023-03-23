@@ -184,6 +184,6 @@ class MyOtherWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<String, bool> myVariable = Provider.of<MyData>(context).myVariable;
     print(myVariable);
-    return const Text('hui');
+    return Container();
   }
 }
