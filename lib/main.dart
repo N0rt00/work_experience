@@ -44,7 +44,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var colour = Colors.red;
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -130,9 +129,9 @@ class _MyHomePageState extends State<MyHomePage> {
               width: 300,
               child: ElevatedButton(
                 onPressed: _login,
-                child: Text(
+                child: const Text(
                   'Login',
-                  style: TextStyle(fontSize: 20, color: colour),
+                  style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
               ),
             ),
