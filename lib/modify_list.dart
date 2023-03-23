@@ -45,7 +45,7 @@ class _ModifyPageState extends State<ModifyPage> {
                   _pressed(i);
                 },
                 child: Text(
-                  i,
+                  i.split('.')[0],
                   style: const TextStyle(color: Colors.red, fontSize: 16),
                 ),
               )
