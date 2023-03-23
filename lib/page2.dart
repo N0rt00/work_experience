@@ -32,7 +32,7 @@ class _SecondPageState extends State<SecondPage> {
     Map<String, bool> dataVar =
         Provider.of<MyData>(context, listen: false).myVariable;
     return setState(() {
-      items.add('${itemController.text}.$uniqueID');
+      //items.add('${itemController.text}.$uniqueID');
       dataVar['${itemController.text}.$uniqueID'] = false;
       itemController.clear();
       uniqueID++;
