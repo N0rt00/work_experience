@@ -46,7 +46,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
+  bool wrongPassword = false;
   _login() {
     setState(() {
       if (usernameController.text == 'user' &&
@@ -54,10 +54,11 @@ class _MyHomePageState extends State<MyHomePage> {
         print('right');
         usernameController.clear();
         passwordController.clear();
+        wrongPassword = false;
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const SecondPage()));
       } else {
-        print('wrong');
+        wrongPassword = true;
       }
     });
   }
@@ -120,6 +121,13 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text(
                 'Forgot Password',
                 style: TextStyle(color: Colors.blue),
+              ),
+            ),
+            Visibility(
+              visible: wrongPassword,
+              child: const Text(
+                'Wrong username or password please try again',
+                style: TextStyle(color: Colors.red, fontSize: 15),
               ),
             ),
             const SizedBox(

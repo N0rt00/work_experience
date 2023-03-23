@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ModifyPage extends StatefulWidget {
-  final Map<String, bool> items;
+  final Map<List<dynamic>, bool> items;
   const ModifyPage({super.key, required this.items});
   @override
   State<ModifyPage> createState() => _ModifyPageState();
@@ -45,7 +45,7 @@ class _ModifyPageState extends State<ModifyPage> {
                   _pressed(i);
                 },
                 child: Text(
-                  i.split('.')[0],
+                  i[0],
                   style: const TextStyle(color: Colors.red, fontSize: 16),
                 ),
               )

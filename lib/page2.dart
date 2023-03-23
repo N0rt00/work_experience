@@ -17,7 +17,7 @@ class _SecondPageState extends State<SecondPage> {
   TextEditingController itemController = TextEditingController();
 
   _modifyList() async {
-    Map<String, bool> dataPassthrough =
+    Map<List<dynamic>, bool> dataPassthrough =
         Provider.of<MyData>(context, listen: false).myVariable;
     final result = await Navigator.push(
         context,
@@ -29,13 +29,13 @@ class _SecondPageState extends State<SecondPage> {
   }
 
   _itemAdd() {
-    Map<String, bool> dataVar =
+    Map<List<dynamic>, bool> dataVar =
         Provider.of<MyData>(context, listen: false).myVariable;
     return setState(() {
       //items.add('${itemController.text}.$uniqueID');
-      dataVar['${itemController.text}.$uniqueID'] = false;
+      var temp = [itemController.text, UniqueKey()];
+      dataVar[temp] = false;
       itemController.clear();
-      uniqueID++;
     });
   }
 
@@ -85,8 +85,11 @@ class _SecondPageState extends State<SecondPage> {
                 ),
               ),
             ),
-            for (var i in Provider.of<MyData>(context).myVariable.keys)
-              Checkbox(foodName: i),
+            for (final i in Provider.of<MyData>(context).myVariable.entries)
+              CheckboxC(
+                foodList: i.key,
+                boolVal: i.value,
+              ),
             Row(
               children: <Widget>[
                 TextButton(
@@ -114,21 +117,17 @@ class _SecondPageState extends State<SecondPage> {
   }
 }
 
-class Checkbox extends StatefulWidget {
-  final String foodName;
-  const Checkbox({super.key, required this.foodName});
+class CheckboxC extends StatefulWidget {
+  final List<dynamic> foodList;
+  final bool boolVal;
+  const CheckboxC({super.key, required this.foodList, required this.boolVal});
   final checkedValue = false;
   @override
-  State<Checkbox> createState() => CheckboxState();
+  State<CheckboxC> createState() => CheckboxState();
 }
 
-class CheckboxState extends State<Checkbox> {
+class CheckboxState extends State<CheckboxC> {
   bool checkedValue = false;
-  Map<String, bool> values = {
-    'Text(widget.foodName, style: TextStyle(color: Colors.deepPurple)': true,
-    'Text(widget.foodName, style: TextStyle(color: Colors.lightBlue)': false,
-  };
-
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -137,9 +136,9 @@ class CheckboxState extends State<Checkbox> {
           setState(() {
             checkedValue = !checkedValue;
           });
-          Map<String, bool> myDataVar =
+          Map<List<dynamic>, bool> myDataVar =
               Provider.of<MyData>(context, listen: false).myVariable;
-          myDataVar[widget.foodName] = checkedValue;
+          myDataVar[widget.foodList] = checkedValue;
           Provider.of<MyData>(context, listen: false).setMyVariable(myDataVar);
           print(myDataVar);
         },
@@ -149,12 +148,11 @@ class CheckboxState extends State<Checkbox> {
             Padding(
               padding: const EdgeInsets.only(left: 30, bottom: 12),
               child: Text(
-                widget.foodName.split('.')[0],
+                widget.foodList[0],
                 style: TextStyle(
                     fontSize: 16,
                     letterSpacing: 1,
-                    decoration: Provider.of<MyData>(context, listen: false)
-                            .myVariable[widget.foodName]!
+                    decoration: widget.boolVal
                         ? TextDecoration.lineThrough
                         : TextDecoration.none),
               ),
@@ -167,11 +165,11 @@ class CheckboxState extends State<Checkbox> {
 }
 
 class MyData extends ChangeNotifier {
-  Map<String, bool> _myVariable = {};
+  Map<List<dynamic>, bool> _myVariable = {};
 
-  Map<String, bool> get myVariable => _myVariable;
+  Map<List<dynamic>, bool> get myVariable => _myVariable;
 
-  void setMyVariable(Map<String, bool> newValue) {
+  void setMyVariable(Map<List<dynamic>, bool> newValue) {
     _myVariable = newValue;
     notifyListeners();
   }
@@ -182,7 +180,8 @@ class MyOtherWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, bool> myVariable = Provider.of<MyData>(context).myVariable;
+    Map<List<dynamic>, bool> myVariable =
+        Provider.of<MyData>(context).myVariable;
     print(myVariable);
     return Container();
   }
