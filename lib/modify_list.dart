@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ModifyPage extends StatefulWidget {
-  final List<String> items;
+  final Map<String, bool> items;
   const ModifyPage({super.key, required this.items});
   @override
   State<ModifyPage> createState() => _ModifyPageState();
 }
 
 class _ModifyPageState extends State<ModifyPage> {
-  List<String> items = [];
-
   _pressed(i) {
     setState(() {
       widget.items.remove(i);
@@ -41,7 +39,7 @@ class _ModifyPageState extends State<ModifyPage> {
               onPressed: _return,
               child: const Text('Return'),
             ),
-            for (var i in widget.items)
+            for (var i in widget.items.keys)
               TextButton(
                 onPressed: () {
                   _pressed(i);
