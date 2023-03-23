@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'modify_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,10 +30,12 @@ class _SecondPageState extends State<SecondPage> {
     Map<List<dynamic>, bool> dataVar =
         Provider.of<MyData>(context, listen: false).myVariable;
     return setState(() {
-      //items.add('${itemController.text}.$uniqueID');
-      var temp = [itemController.text, UniqueKey()];
-      dataVar[temp] = false;
-      itemController.clear();
+      if (itemController.text.trim().isNotEmpty) {
+        var temp = [itemController.text, UniqueKey()];
+
+        dataVar[temp] = false;
+        itemController.clear();
+      }
     });
   }
 
@@ -109,7 +109,6 @@ class _SecondPageState extends State<SecondPage> {
                 )
               ],
             ),
-            const MyOtherWidget()
           ],
         ),
       ),
@@ -140,7 +139,6 @@ class CheckboxState extends State<CheckboxC> {
               Provider.of<MyData>(context, listen: false).myVariable;
           myDataVar[widget.foodList] = checkedValue;
           Provider.of<MyData>(context, listen: false).setMyVariable(myDataVar);
-          print(myDataVar);
         },
         splashFactory: NoSplash.splashFactory,
         child: Stack(
@@ -172,17 +170,5 @@ class MyData extends ChangeNotifier {
   void setMyVariable(Map<List<dynamic>, bool> newValue) {
     _myVariable = newValue;
     notifyListeners();
-  }
-}
-
-class MyOtherWidget extends StatelessWidget {
-  const MyOtherWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    Map<List<dynamic>, bool> myVariable =
-        Provider.of<MyData>(context).myVariable;
-    print(myVariable);
-    return Container();
   }
 }
