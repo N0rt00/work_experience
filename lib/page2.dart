@@ -2,18 +2,10 @@
 
 import 'modify_list.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SecondPage extends StatefulWidget {
   const SecondPage({super.key});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   @override
   State<SecondPage> createState() => _SecondPageState();
@@ -21,13 +13,29 @@ class SecondPage extends StatefulWidget {
 
 class _SecondPageState extends State<SecondPage> {
   List<String> items = [];
+  int uniqueID = 0;
   TextEditingController itemController = TextEditingController();
 
   _modifyList() async {
-    final result = await Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ModifyPage(items: items)));
+    Map<String, bool> dataPassthrough =
+        Provider.of<MyData>(context, listen: false).myVariable;
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ModifyPage(items: dataPassthrough)));
     setState(() {
-      items = result;
+      Provider.of<MyData>(context, listen: false).setMyVariable(result);
+    });
+  }
+
+  _itemAdd() {
+    Map<String, bool> dataVar =
+        Provider.of<MyData>(context, listen: false).myVariable;
+    return setState(() {
+      items.add('${itemController.text}.$uniqueID');
+      dataVar['${itemController.text}.$uniqueID'] = false;
+      itemController.clear();
+      uniqueID++;
     });
   }
 
@@ -58,7 +66,8 @@ class _SecondPageState extends State<SecondPage> {
                     TextButton(
                         onPressed: () {
                           setState(() {
-                            items = [];
+                            Provider.of<MyData>(context, listen: false)
+                                .setMyVariable({});
                           });
                         },
                         child: const Text('Clear List')),
@@ -76,15 +85,13 @@ class _SecondPageState extends State<SecondPage> {
                 ),
               ),
             ),
-            for (var i in items) Checkbox(foodName: i),
+            for (var i in Provider.of<MyData>(context).myVariable.keys)
+              Checkbox(foodName: i),
             Row(
               children: <Widget>[
                 TextButton(
                     onPressed: () {
-                      setState(() {
-                        items.add(itemController.text);
-                        itemController.clear();
-                      });
+                      _itemAdd();
                     },
                     child: const Icon(Icons.add)),
                 SizedBox(
@@ -99,6 +106,7 @@ class _SecondPageState extends State<SecondPage> {
                 )
               ],
             ),
+            const MyOtherWidget()
           ],
         ),
       ),
@@ -126,10 +134,14 @@ class CheckboxState extends State<Checkbox> {
     return Material(
       child: InkWell(
         onTap: () {
-          print('clicked');
           setState(() {
             checkedValue = !checkedValue;
           });
+          Map<String, bool> myDataVar =
+              Provider.of<MyData>(context, listen: false).myVariable;
+          myDataVar[widget.foodName] = checkedValue;
+          Provider.of<MyData>(context, listen: false).setMyVariable(myDataVar);
+          print(myDataVar);
         },
         splashFactory: NoSplash.splashFactory,
         child: Stack(
@@ -137,11 +149,12 @@ class CheckboxState extends State<Checkbox> {
             Padding(
               padding: const EdgeInsets.only(left: 30, bottom: 12),
               child: Text(
-                widget.foodName,
+                widget.foodName.split('.')[0],
                 style: TextStyle(
                     fontSize: 16,
                     letterSpacing: 1,
-                    decoration: checkedValue
+                    decoration: Provider.of<MyData>(context, listen: false)
+                            .myVariable[widget.foodName]!
                         ? TextDecoration.lineThrough
                         : TextDecoration.none),
               ),
@@ -150,5 +163,27 @@ class CheckboxState extends State<Checkbox> {
         ),
       ),
     );
+  }
+}
+
+class MyData extends ChangeNotifier {
+  Map<String, bool> _myVariable = {};
+
+  Map<String, bool> get myVariable => _myVariable;
+
+  void setMyVariable(Map<String, bool> newValue) {
+    _myVariable = newValue;
+    notifyListeners();
+  }
+}
+
+class MyOtherWidget extends StatelessWidget {
+  const MyOtherWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Map<String, bool> myVariable = Provider.of<MyData>(context).myVariable;
+    print(myVariable);
+    return const Text('hui');
   }
 }
