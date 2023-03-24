@@ -1,4 +1,7 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
+import 'package:flutter_shopping/forgot_password.dart';
 import 'page2.dart';
 import 'package:provider/provider.dart';
 
@@ -34,22 +37,28 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool wrongPassword = false;
+  String textString = 'a';
+  String password = 'password';
   _login() {
     setState(() {
       if (usernameController.text == 'user' &&
-          passwordController.text == 'password') {
+          passwordController.text == password) {
         usernameController.clear();
         passwordController.clear();
         wrongPassword = false;
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const SecondPage()));
       } else {
+        textString = 'Wrong username or password please try again';
         wrongPassword = true;
       }
     });
   }
 
-  _forgotPasswd() {}
+  _forgotPasswd() async {
+    password = await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const EmailCheck()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,9 +120,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Visibility(
               visible: wrongPassword,
-              child: const Text(
-                'Wrong username or password please try again',
-                style: TextStyle(color: Colors.red, fontSize: 15),
+              child: Text(
+                textString,
+                style: const TextStyle(color: Colors.red, fontSize: 15),
+                textAlign: TextAlign.center,
               ),
             ),
             const SizedBox(
